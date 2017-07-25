@@ -1,84 +1,139 @@
-/*Programming Foundations in JavaScript Final Project
-Now that you have completed the Programming Foundation in JavaScript Course, you will be putting your newly acquired knowledge to the test. You will be building a Quiz App with what you have learned in the lessons preceding this project.
+class Choice {
 
-Requirements
-Use classes
-Use the prompt and alert methods to present your quiz
-Give the user 5 questions
-Each question has one possible answer from a list of answers (Give the user a minimum of 3 and no more than 5 choices)
-Assign points to each question and maintain a running total for the quiz
-If you allow the user to retake the question until they get it correct deduct 1 point each time they get the question wrong
-Bonus
-Setup multiple quizzes
-Store the quiz in local storage
-Use HTML to present your quiz
-Allow the user to create their own quizzes*/
+   constructor(isCorrect, answer ){
+    isCorrect=false;
+    answer='';
+  };
 
-class question{
+  //renderChoice?
+  // render out choice?
+}
+class Question{
+      constructor(query, answer, pointValue, choices){
+        this.query = query;
+        this.pointValue = pointValue || 1;
+        this.choices = choices || [new Choice, new Choice, new Choice];
+      }
 
-      constructor(title,answer,pointValue){
-        this.title=title;
-        this.answer= answer;
-        this.pointValue= pointValue;
-        this.choices=["choice 1", "choice 2", "choice 3"]
-      };
-      getQuestion() {
+      renderQuestion(){
+      // write html
+    }
 
-
-          console.log( this.title + ' ' + this.pointValue+'pts.') ;
-          for(var i=0; i<this.choices.length;i++)
-          {
-          console.log(this.choices[i]);
-          }
-      };
-
-      getChoices() {
-          return this.choices;
-      };
-      setChoices(choice1,choice2,choice3){
-
-          this.choices[0]= choice1;
-          this.choices[1]= choice2;
-          this.choices[2]= choice3;
-
-
-      };
-
-};
-class quiz{
+}
+class Quiz{
   constructor(title){
-    this.title=title;
+    this.title=title||"quiz";
     this.correct=0;
     this.totalValue= 0;
     this.score=0;
-    this.questions=[new question,new question ,new question ];
+    this.questions=[{
+      query: 'What is a good philosopy question?',
+      points: 20,
+      choices: [{isCorrect: false,answer:"Are you smart?"},{isCorrect: false,answer:"How many toes do you have?",},{isCorrect: true, answer:"Does God exist?",}]
+    },
+    {
+      query: 'What makes the word go round?',
+      points: 20,
+      choices: [{isCorrect: true,answer:"Money"},{isCorrect: false,answer:"Fame",},{isCorrect: true, answer:"Happiness",}]
+    },
+    {
+      query: 'If your friends are close, where do you keep your enemies?',
+      points: 20,
+      choices: [{isCorrect: false,answer:"Close"},{isCorrect: true,answer:"Closer",},{isCorrect: false, answer:"Far Far Away",}]
+    },
+    {
+      query: 'How much do your thoughts cost?',
+      points: 20,
+      choices: [{isCorrect: false,answer:"A million dollars"},{isCorrect: true,answer:"A Penny",},{isCorrect: false, answer:"Free",}]
+    },
+    {
+      query: 'what does Hakuna Matata mean?',
+      points: 20,
+      choices: [{isCorrect: false,answer:"A Lion King"},{isCorrect: false,answer:"Hello World",},{isCorrect: true, answer:"No Worries",}]
+    }];
+
   };
 
-  calcScore(){
-    return this.correct/this.totalValue;
+
+
+  renderQuiz(){
+    // process the questions
+    var node=[];
+    var nodeList=[];
+    var form=[];
+    var radio=[];
+    var node2=[];
+    var nodeList2=[];
+    for (var i=0;i<this.questions.length;i++)
+    {
+      node[i]=document.createElement("div");
+      form[i]=document.createElement("form");
+      form[i].setAttribute("id",this.questions[i].query);
+      nodeList[i]=document.createTextNode(this.questions[i].query);
+      document.getElementById("quiz").appendChild(node[i]);
+      node[i].appendChild(nodeList[i]);
+      node[i].appendChild(form[i]);
+
+      for(var x=0;x<this.questions[i].choices.length;x++){
+
+        radio[x]=document.createElement("input");
+        node2[x]=document.createElement("div");
+        radio[x].setAttribute("type","radio");
+        radio[x].setAttribute("name",this.questions[i].query);
+        radio[x].setAttribute("id",this.questions[i].choices[x].answer);
+        radio[x].value=this.questions[i].choices[x].isCorrect;
+        nodeList2[x]=document.createTextNode(this.questions[i].choices[x].answer);
+        document.getElementById(this.questions[i].query).appendChild(radio[x]);
+        document.getElementById(this.questions[i].query).appendChild(nodeList2[x]);
+
+
+
+      }
+
+
+    }
+  }
+}
+
+function submitQuiz(){
+  //alert("This feature does not exist yet");
+  myQuiz.totalValue=0;
+  myQuiz.correct=0;
+  var selection=false;
+  var rightAnswer=false;
+  for(var i=0;i<myQuiz.questions.length;i++)
+    {
+      myQuiz.totalValue+=myQuiz.questions[i].points;
+
+      for(var x=0;x<myQuiz.questions[i].choices.length;x++)
+      {
+      //  console.log(document.getElementById(myQuiz.questions[i].choices[x].answer).value+" "+document.getElementById(myQuiz.questions[i].choices[x].answer).checked);
+        rightAnswer=document.getElementById(myQuiz.questions[i].choices[x].answer).value;
+        selection=document.getElementById(myQuiz.questions[i].choices[x].answer).checked;
+
+        if(rightAnswer=="true" && selection)
+        {
+          console.log(myQuiz.correct);
+          myQuiz.correct+=myQuiz.questions[i].points;
+
+        }else{console.log("not right")};
+      }
+    }
+    myQuiz.score=myQuiz.correct/myQuiz.totalValue;
+    alert("You scored a " + myQuiz.score*100);
   }
 
+
+function createQuiz(){
+if (run==0)
+  {
+    myQuiz.renderQuiz();
+    run++;
+  }
 }
-//make Questions
-var myQuestion1=new question ("What makes the word go round?",1,8);
-myQuestion1.setChoices("money","Women","Happiness");
+function saveQuiz(){
 
-var myQuestion2=new question ("What is a good philosopy question",2,5);
-myQuestion2.setChoices("Are you smart?","How many toes do you have? ","Does God exist?");
-
-var myQuestion3=new question ("Where do you keep your enemies",0,12);
-myQuestion3.setChoices("Closer","close","far away ");
-
-
-//initialize quiz
-var philoQuiz= new quiz("Philosopy Quiz")
-philoQuiz.questions[0]=myQuestion1;
-philoQuiz.questions[1]=myQuestion2;
-philoQuiz.questions[2]=myQuestion3;
-
-console.log(philoQuiz.questions[1].pointValue);
-//console.log("The correct answer is " + myQuestion1.choices[myQuestion1.answer]);
-for(var i=0;i<philoQuiz.questions.length;i++){
-philoQuiz.totalValue=philoQuiz.questions[i].pointValue+philoQuiz.totalValue;
-};
-console.log(philoQuiz.totalValue);
+alert("This feature does not exist yet");
+}
+var myQuiz=new Quiz();
+var run=0;
